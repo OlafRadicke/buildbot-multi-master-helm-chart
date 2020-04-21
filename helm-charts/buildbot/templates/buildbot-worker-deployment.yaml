@@ -1,0 +1,37 @@
+{{ $global := . }}
+{{- range  $key, $val :=  .Values.wortkerTypes }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $key }}
+  labels:
+    app: {{ $key }}
+spec:
+  replicas: {{ $val.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $key }}
+  template:
+    metadata:
+      labels:
+        app: {{ $key }}
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: {{ $key }}
+          image: {{ $val.image | quote }}
+          env:
+            - name: BUILDMASTER
+              value: buildbot
+            - name: BUILDMASTER_PORT
+              value: "9989"
+            - name: WORKERNAME
+              value: {{ $key }}
+            - name: WORKERPASS
+              value: {{ $global.Values.workerPassword }}
+            - name: WORKER_ENVIRONMENT_BLACKLIST
+              value: DOCKER_BUILDBOT* BUILDBOT_ENV_* BUILDBOT_1* WORKER_ENVIRONMENT_BLACKLIST
+---
+{{- end }}
+

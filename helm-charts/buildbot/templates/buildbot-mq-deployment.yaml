@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mq
+  name: mq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mq
+  template:
+    metadata:
+      labels:
+        app: mq
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: mq
+          image: crossbario/crossbar
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BUILDBOT_DB_URL
+              value: "postgresql+psycopg2://{{ .Values.postres_user }}:{{ .Values.postgres_password }}@db/{{ .Values.postgres_db }}"
+            - name: POSTGRES_DB
+              value: buildbot
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.postgres_password }}"
+            - name: POSTGRES_USER
+              value: "{{ .Values.postres_user }}"
+

@@ -1,0 +1,69 @@
+{{ $global := . }}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: buildbot
+  labels:
+    app: buildbot
+spec:
+  replicas: {{ .Values.master_replicas }}
+  selector:
+    matchLabels:
+      app: buildbot
+  template:
+    metadata:
+      labels:
+        app: buildbot
+    spec:
+      restartPolicy: Always
+      volumes:
+        - name: buildbot-config-volume
+          configMap: 
+            name: buildbot-config
+            defaultMode: 0777
+            items:
+              - key: master_cfg
+                path: master.cfg
+              - key: start_buildbot_sh
+                path: start_buildbot.sh
+              - key: buildbot_tac
+                path: buildbot.tac
+      containers:
+      - name: buildbot
+        image: {{ .Values.master_image }}
+        command: ["sh", "-c", "cp -fv /run/configmap/* /srv/buildbot/ && sh ./start_buildbot.sh"]
+        ports:
+          - containerPort: 8080
+          - containerPort: 9989
+        volumeMounts:
+          - mountPath: /run/configmap/
+            name: buildbot-config-volume
+            readOnly: false
+        env:
+          - name: "BUILDBOT_CONFIG_DIR"
+            value: "config"
+          - name: "BUILDBOT_CONFIG_URL"
+            value: "{{ .Values.buildbot_config_url }}"
+          - name: "BUILDBOT_DB_URL"
+            value: "postgresql+psycopg2://{{ .Values.postres_user }}:{{ .Values.postgres_password }}@db/{{ .Values.postgres_db }}"
+          - name: "BUILDBOT_MQ_DEBUG"
+            value: "{{ .Values.buildbot_mq_debug }}"
+          - name: "BUILDBOT_MQ_REALM"
+            value: "realm1"
+          - name: "BUILDBOT_MQ_URL"
+            value: "ws://mq:8080/ws"
+          - name: "BUILDBOT_WEB_PORT"
+            value: "tcp:port=8080"
+          - name: "BUILDBOT_WEB_URL"
+            value: {{ .Values.buildbot_web_url }}
+          - name: "BUILDBOT_WORKER_PORT"
+            value: "9989"
+          - name: "POSTGRES_DB"
+            value: "{{ .Values.postgres_db }}"
+          - name: "POSTGRES_PASSWORD"
+            value: "{{ .Values.postgres_password }}"
+          - name: "POSTGRES_USER"
+            value: "{{ .Values.postres_user }}"
+          - name: "TCP_PORTS"
+            value: "8080,9989"
