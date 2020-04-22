@@ -67,21 +67,24 @@ data:
         c['change_source'] = []
         c['change_source'].append(
             changes.GitPoller(
-                'https://github.com/OlafRadicke/buildbot_fake_project_repo.git',
+                {{ $global.Values.pollURL | quote }},
                 workdir='gitpoller-workdir', 
                 branch='master',
-                pollinterval=300))
+                pollinterval={{ $global.Values.pollInterval }}
+            )
+        )
 
         c['workers'] = []
 {{- range  $key, $val :=  .Values.wortkerTypes }}
         c['workers'].append(
             worker.Worker(
                 {{ $key  | quote }}, 
-                {{ $global.Values.workerPassword  | quote }}
+                {{ $val.password  | quote }}
             )
         )
 {{- end }}
 
+        f = {}
         factory = util.BuildFactory()
         factory.addStep(
             steps.Git(

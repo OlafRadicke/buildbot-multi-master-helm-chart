@@ -1,5 +1,3 @@
-
-
 buildbot_config_url: ""
 buildbot_web_url: "http://localhost:8080/"
 buildbot_mq_debug: "info"
@@ -7,14 +5,18 @@ postgres_db: "buildbot"
 postgres_password: "change_me"
 postres_user: "buildbot"
 postgres_port: 5432
-workerLogin: "worker"
-workerPassword: "change_me"
+pollInterval: 60
+pollURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo.git"
 master_image: olafradicke/alternativ_buildbot_master:v2.7.0r8
 master_replicas: 2
 wortkerTypes:
   "root-worker":
-    image: olafradicke/alternativ_buildbot_root_worker:latest
+    image: olafradicke/alternativ_buildbot_root_worker:v2.7.0r15
     replicas: 1
-  "minimal-worker":
-    image: olafradicke/alternativ_buildbot_worker:latest
+    password: "change_me"
+    ciBuildSkript: "./script/cibuild"
+  "fedora-worker":
+    image: olafradicke/alternativ_buildbot_fedora_worker:v2.7.0r15
     replicas: 2
+    password: "change_me"
+    ciBuildSkript: "./script/fedorabuild"
