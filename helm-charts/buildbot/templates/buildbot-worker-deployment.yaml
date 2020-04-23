@@ -18,9 +18,15 @@ spec:
         app: {{ $key }}
     spec:
       restartPolicy: Always
+      volumes:
+        - name: cache-volume
+          emptyDir: {}
       containers:
         - name: {{ $key }}
           image: {{ $val.image | quote }}
+          volumeMounts:
+            - mountPath: /buildbot/build
+              name: cache-volume
           env:
             - name: BUILDMASTER
               value: buildbot

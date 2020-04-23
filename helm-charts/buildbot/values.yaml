@@ -14,9 +14,11 @@ wortkerTypes:
     image: olafradicke/alternativ_buildbot_root_worker:v2.7.0r15
     replicas: 1
     password: "change_me"
+    gitURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo.git"
     ciBuildSkript: "./script/cibuild"
   "fedora-worker":
     image: olafradicke/alternativ_buildbot_fedora_worker:v2.7.0r15
     replicas: 2
     password: "change_me"
+    gitURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo.git"
     ciBuildSkript: "./script/fedorabuild"

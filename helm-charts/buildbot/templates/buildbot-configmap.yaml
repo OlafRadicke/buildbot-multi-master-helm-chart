@@ -63,7 +63,7 @@ data:
                 'wamp_debug_level': os.environ.get('BUILDBOT_MQ_DEBUG', 'info')
             }
         c['protocols'] = {'pb': {'port': os.environ.get("BUILDBOT_WORKER_PORT", 9989)}}
-
+        c['multiMaster'] = True
         c['change_source'] = []
         c['change_source'].append(
             changes.GitPoller(
@@ -84,32 +84,30 @@ data:
         )
 {{- end }}
 
-        f = {}
-        factory = util.BuildFactory()
-        factory.addStep(
+        factory = {}
+{{- range  $key, $val :=  .Values.wortkerTypes }}
+        factory[ {{ $key | quote }} ] = util.BuildFactory()
+        factory[ {{ $key | quote }} ].addStep(
             steps.Git(
-                repourl='https://github.com/OlafRadicke/buildbot_fake_project_repo.git', 
+                repourl={{ $val.gitURL | quote }}, 
                 mode='incremental'
             )
         )
-        factory.addStep(
+        factory[ {{ $key | quote }} ].addStep(
             steps.ShellCommand(
-                command=["sh", "./script/bootstrap"]
+                command=["sh", {{ $val.ciBuildSkript | quote }} ]
             )
         )
-        factory.addStep(
-            steps.ShellCommand(
-                command=["sh", "./script/cibuild"]
-            )
-        )
+{{- end }}
 
         c['builders'] = []
 {{- range  $key, $val :=  .Values.wortkerTypes }}        
         c['builders'].append(
             util.BuilderConfig(
                 name={{ $key  | quote }},
-                workernames=[{{ $key  | quote }}],
-                factory=factory
+                workernames=[ {{ $key | quote }} ],
+                factory=factory[ {{ $key | quote }} ],
+                workerbuilddir="/buildbot/build/" 
             )
         )
 {{- end }}
@@ -117,10 +115,10 @@ data:
 {{- range  $key, $val :=  .Values.wortkerTypes }}       
         c['schedulers'].append(
             schedulers.SingleBranchScheduler(
-                name={{ $key  | quote }},
+                name={{ $key | quote }},
                 change_filter=util.ChangeFilter(branch='master'),
                 treeStableTimer=None,
-                builderNames=[{{ $key  | quote }}]
+                builderNames=[ {{ $key | quote }} ]
             )
         )
 {{- end }}

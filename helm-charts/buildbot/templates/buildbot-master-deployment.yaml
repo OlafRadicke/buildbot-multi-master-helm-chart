@@ -8,6 +8,8 @@ metadata:
     app: buildbot
 spec:
   replicas: {{ .Values.master_replicas }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: buildbot
