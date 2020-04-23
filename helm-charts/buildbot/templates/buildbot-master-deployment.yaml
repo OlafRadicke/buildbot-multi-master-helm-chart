@@ -45,8 +45,6 @@ spec:
         env:
           - name: "BUILDBOT_CONFIG_DIR"
             value: "config"
-          - name: "BUILDBOT_CONFIG_URL"
-            value: "{{ .Values.buildbot_config_url }}"
           - name: "BUILDBOT_DB_URL"
             value: "postgresql+psycopg2://{{ .Values.postres_user }}:{{ .Values.postgres_password }}@db/{{ .Values.postgres_db }}"
           - name: "BUILDBOT_MQ_DEBUG"
@@ -57,8 +55,6 @@ spec:
             value: "ws://mq:8080/ws"
           - name: "BUILDBOT_WEB_PORT"
             value: "tcp:port=8080"
-          - name: "BUILDBOT_WEB_URL"
-            value: {{ .Values.buildbot_web_url }}
           - name: "BUILDBOT_WORKER_PORT"
             value: "9989"
           - name: "POSTGRES_DB"

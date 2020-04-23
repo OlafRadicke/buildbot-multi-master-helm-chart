@@ -1,5 +1,6 @@
-buildbot_config_url: ""
-buildbot_web_url: "http://localhost:8080/"
+buildbotWebURL: "http://localhost:8080/"
+buildbotTitle: "buildbot_fake_project"
+buildbotTitleURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo/blob/master/README.md"
 buildbot_mq_debug: "info"
 postgres_db: "buildbot"
 postgres_password: "change_me"
