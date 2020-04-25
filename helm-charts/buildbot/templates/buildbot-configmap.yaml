@@ -121,7 +121,7 @@ data:
         c['schedulers'].append(
             schedulers.SingleBranchScheduler(
                 name={{ $key | quote }},
-                change_filter=util.ChangeFilter(branch='master'),
+                change_filter=util.ChangeFilter(branch_re={{ $val.branchFilterRegEx | quote }} ),
                 treeStableTimer=None,
                 builderNames=[ {{ $key | quote }} ]
             )
