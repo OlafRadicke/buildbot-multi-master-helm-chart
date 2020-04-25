@@ -1,21 +1,40 @@
-buildbotWebURL: "http://localhost:8080/"
+# Three basic settings describe the buildmaster in status reports:
 buildbotTitle: "buildbot_fake_project"
 buildbotTitleURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo/blob/master/README.md"
+# The string should point to the location where the buildbot’s internal 
+# web server is visible. This URL must end with a slash (/).
+buildbotWebURL: "http://localhost:8080/"
+# The log level of the message queue
 buildbot_mq_debug: "info"
+# The postgres data base name
 postgres_db: "buildbot"
+# The postgres password
 postgres_password: "change_me"
+# The postgres user
 postres_user: "buildbot"
+# The postgres port
 postgres_port: 5432
+# The interval of polling the git reposytory.
 pollInterval: 60
+# The URL of the polling reposytory.
 pollURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo.git"
+# The used docker image for the master pods.
 master_image: olafradicke/alternativ_buildbot_master:v2.7.0r8
+# The number of replicas from the master pod.
 master_replicas: 2
+# Map of workers.
 wortkerTypes:
+  # name of the worker
   "root-worker":
+    # Docker image of the worker.
     image: olafradicke/alternativ_buildbot_root_worker:v2.7.0r15
+    # The password of the worker.
     password: "change_me"
+    # The git repository that the worker is download.
     gitURL: "https://github.com/OlafRadicke/buildbot_fake_project_repo.git"
+    # The script that the worker is executing.
     ciBuildSkript: "./script/cibuild"
+    # The git brunch that the worker is use.
     branchFilterRegEx: "test/.*"
   "fedora-worker-01":
     image: olafradicke/alternativ_buildbot_fedora_worker:v2.7.0r15
