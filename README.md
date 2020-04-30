@@ -5,21 +5,21 @@ About BuildBot
 --------------
 
 BuildBot is a CI/CD framwork. It is written in python but usable by all
-programming languages. One spcele of BuildBot is, that he can support
+programming languages. One special of BuildBot is, that it can support
 multiple master in your setup. That is fundamental  for a high scalability
-build farm. Read more about BuildBot on there own Site: 
+build farm. Read more about BuildBot on their own Site: 
 ***[buildbot.net](https://buildbot.net/)***
 
 The concept
 -----------
 
-The communication between the the masters and the workers is opened of site
-the worker.  The workers is not knowed that he talk with a load balancer. 
+The communication between the the masters and the workers is opened by side
+of the worker.  The workers does not knowe that it talks with a load balancer. 
 The masters is syncing his state about the database. So it is not important
-which master is answer the worker. But for the master is all worker a
-unique client. so If comes two difference worker with the same login
-credentials, than it is a in the ayes of the master a duplicate.  That is
-the reasons , that we can't have ReplicaSet of worker.
+which master is answering to the worker. But for the masters are all worker 
+unique clients. So if two difference worker with the same login
+credentials came, it is looking for the masters like a duplicate. That is
+the reasons , why we can not have ReplicaSets of workers.
 
 | ![multi-master-concept.png](multi-master-concept.png) |
 |-------------------------------------------------------|
@@ -60,8 +60,8 @@ helm install \
 ```
 
 In the file [values.yaml](helm-charts/buildbot/values.yaml) can you find the 
-example configuration. It will be create a master with tow replicas and three
-different worker.
+example configuration. It will create a master with two replicas and three
+different workers.
 
 Bebuging
 --------
@@ -78,12 +78,12 @@ If you have trouble with this chart you can use the chart linter:
 Notes and knowed issues
 -----------------------
 
-* The volume mount for the master configuration is readonly but the BuildBot 
-master needed the write exess to his configuration. So he get only a copy of 
+* The volume mount for the master configuration is read only, but the BuildBot 
+master need the write exess to its configuration. So it gets only a copy of 
 the configuration from the configuration of the volume mount.  This copy will 
-be created by the creating of the pod, only one time (without updates in his 
+be created by the creating of the pod, only one time (without updates in its 
 life time).
-* No support for worker ReplicaSets in thes moment. See section *The concept*.
+* No support for worker ReplicaSets in this moment. See section *The concept*.
 
 License note
 ------------
